@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<style>
+    body{
+        background-image: url("/bg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    #boxLogin{
+        display: flex;
+        justify-content: center;
+    }
+
+    .window{
+        margin-top: 60px;
+        width:500px;
+        padding:40px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 4px rgba(255, 255, 255, 0.288);
+
+        backdrop-filter:blur(60px) brightness(112%);
+
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        color:white;
+    }
+
+    #boxLogin form{
+        margin-top: 20px;
+        margin-bottom: 40px;
+    }
+</style>
+
+<body>
+<div id="boxLogin">
+    <div class="window">
+        <form action="#" method="post">
+            <h1 class="text-center text-white text-2xl font-bold mb-6 uppercase">Sign In</h1>
+            <div class="relative z-0 w-full mt-14 group">
+                <input type="text" name="username" id="username" class="block py-2.5 px-0 w-full text-sm text-white-900 bg-transparent border-0 border-b-2 border-white-300 appearance-none dark:text-white dark:border-white-600 dark:focus:border-cyan-300 focus:outline-none focus:ring-0 focus:border-cyan-300 peer" placeholder=" " required />
+                <label for="username" class="text-white peer-focus:font-medium absolute text-sm text-white-500 dark:text-white-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-cyan-300 peer-focus:dark:text-cyan-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
+            </div>
+            <div class="relative z-0 w-full mt-8 group">
+                <input type="password" name="password" id="password" class="block py-2.5 px-0 w-full text-sm text-white-900 bg-transparent border-0 border-b-2 border-white-300 appearance-none dark:text-white dark:border-white-600 dark:focus:border-cyan-300 focus:outline-none focus:ring-0 focus:border-cyan-300 peer" placeholder=" " required />
+                <label for="password" class="text-white peer-focus:font-medium absolute text-sm text-white-500 dark:text-white-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-cyan-300 peer-focus:dark:text-cyan-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+            </div>
+
+            <p class="text-right mt-6">
+                You do not have an account?
+                <a href="#" class="text-cyan-300 hover:text-cyan-400">Sign up</a>
+            </p>
+
+            <div class="flex justify-end mt-12">
+                <button type="submit" class="w-full flex justify-center text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg  dark:shadow-lg font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button>
+            </div>
+        </form>
+        <p class="text-sm text-center mt-4">Copyright © Signature & JWT System</p>
+    </div>
+</div>
+</body>
+</html>
