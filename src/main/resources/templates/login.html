@@ -2,12 +2,20 @@
 <html lang="en" xmlns:th="http:www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login - Sign System</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <style>
+    #alert-fail,#alert-success{
+        max-width: 450px;
+        width: 60%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
     body{
-        background-image: url("/bg.jpg");
+        background-image: url("https://www.sliit.lk/wp-content/uploads/2018/02/minimalizm-gradient-background.jpg");
         background-repeat: no-repeat;
         background-size: cover;
     }
@@ -41,7 +49,7 @@
 <body>
 <div id="boxLogin">
     <div class="window">
-        <form action="#" method="post">
+        <form th:action=@{/login} method="post">
             <h1 class="text-center text-white text-2xl font-bold mb-6 uppercase">Sign In</h1>
             <div class="relative z-0 w-full mt-14 group">
                 <input type="text" name="username" id="username" class="block py-2.5 px-0 w-full text-sm text-white-900 bg-transparent border-0 border-b-2 border-white-300 appearance-none dark:text-white dark:border-white-600 dark:focus:border-cyan-300 focus:outline-none focus:ring-0 focus:border-cyan-300 peer" placeholder=" " required />
@@ -64,5 +72,66 @@
         <p class="text-sm text-center mt-4">Copyright © Signature & JWT System</p>
     </div>
 </div>
+<div style="display: none;" id="alert-fail"
+     class="shadow-md items-center p-4 mb-4 text-red-800 border-t-4 border-red-400 bg-red-50 dark:text-red-400" role="alert">
+    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+         viewBox="0 0 20 20">
+        <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+    </svg>
+    <div class="ml-3 text-sm font-medium">
+        Login fail. Please try again !
+    </div>
+    <button type="button"
+            class="ml-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex items-center justify-center h-8 w-8"
+            data-dismiss-target="#alert-border-2" aria-label="Close">
+        <span class="sr-only">Dismiss</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+    </button>
+</div>
+<div style="display: none;" id="alert-success" class="shadow-md items-center p-4 mb-4 text-green-800 border-t-4 border-green-400 bg-green-50"
+     role="alert">
+    <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+         viewBox="0 0 20 20">
+        <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+    </svg>
+    <div class="ml-3 text-sm font-medium">
+        Login Successfully !
+    </div>
+    <button type="button"
+            class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8"
+            data-dismiss-target="#alert-border-3" aria-label="Close">
+        <span class="sr-only">Dismiss</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+    </button>
+</div>
+<script th:inline="javascript">
+    const alertFail = document.getElementById("alert-fail")
+    const alertSuccess = document.getElementById("alert-success")
+
+    document.querySelector("#alert-fail button").addEventListener("click",()=>{
+        alertFail.style.display="none"
+    })
+    document.querySelector("#alert-success button").addEventListener("click",()=>{
+        alertSuccess.style.display="none"
+    })
+
+    if([[${alert}]] === false){
+        alertFail.style.display="flex";
+        alertSuccess.style.display="none";
+    }
+    else if([[${alert}]] === true){
+        alertFail.style.display="none";
+        alertSuccess.style.display="flex";
+    }
+
+</script>
 </body>
 </html>

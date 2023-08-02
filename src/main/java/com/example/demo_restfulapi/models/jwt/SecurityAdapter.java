@@ -1,6 +1,5 @@
-package com.example.demo_restfulapi.Models.JWT;
+package com.example.demo_restfulapi.models.jwt;
 
-import com.example.demo_restfulapi.Models.JWT.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

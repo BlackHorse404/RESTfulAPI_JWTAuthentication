@@ -1,5 +1,8 @@
-package com.example.demo_restfulapi.Models;
+package com.example.demo_restfulapi.models;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+@EntityScan
 public class Book {
     private int id;
     private String name;

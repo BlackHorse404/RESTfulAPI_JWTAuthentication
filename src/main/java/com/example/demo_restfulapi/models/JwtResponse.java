@@ -1,8 +1,11 @@
-package com.example.demo_restfulapi.Models;
+package com.example.demo_restfulapi.models;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+@EntityScan
 public class JwtResponse {
 
-    private String status;
+    private int status;
     private String username;
     private String token;
     private String tokenType;
@@ -11,11 +14,11 @@ public class JwtResponse {
         return tokenType;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public JwtResponse(String username, String token, String type, String status) {
+    public JwtResponse(String username, String token, String type, int status) {
         this.username = username;
         this.token = token;
         this.tokenType = type;

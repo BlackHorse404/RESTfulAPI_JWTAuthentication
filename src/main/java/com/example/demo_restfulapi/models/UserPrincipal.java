@@ -1,4 +1,4 @@
-package com.example.demo_restfulapi.Models;
+package com.example.demo_restfulapi.models;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

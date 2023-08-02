@@ -1,4 +1,4 @@
-package com.example.demo_restfulapi.Models.JWT;
+package com.example.demo_restfulapi.models.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

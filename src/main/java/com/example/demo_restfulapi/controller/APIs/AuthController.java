@@ -1,8 +1,7 @@
-package com.example.demo_restfulapi.Controller;
-
-import com.example.demo_restfulapi.Models.JWT.JwtProvider;
-import com.example.demo_restfulapi.Models.JwtResponse;
-import com.example.demo_restfulapi.Models.User;
+package com.example.demo_restfulapi.controller.APIs;
+import com.example.demo_restfulapi.models.jwt.JwtProvider;
+import com.example.demo_restfulapi.models.JwtResponse;
+import com.example.demo_restfulapi.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.generateToken(authentication);
-        JwtResponse res = new JwtResponse(login.getUsername(),jwt,"Bearer","success");
+        JwtResponse res = new JwtResponse(login.getUsername(),jwt,"Bearer", HttpStatus.OK.value());
         System.out.println(res);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }

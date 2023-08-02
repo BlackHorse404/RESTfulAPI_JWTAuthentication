@@ -1,7 +1,8 @@
-package com.example.demo_restfulapi.Models.JWT;
+package com.example.demo_restfulapi.models.jwt;
 
-import com.example.demo_restfulapi.Models.UserPrincipal;
+import com.example.demo_restfulapi.models.UserPrincipal;
 import io.jsonwebtoken.*;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 
+@EntityScan
 @Component
 public class JwtProvider {
     private String jwtSecret = PasswordHashed();

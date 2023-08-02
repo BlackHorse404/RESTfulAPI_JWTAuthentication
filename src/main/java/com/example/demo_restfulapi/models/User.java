@@ -1,5 +1,8 @@
-package com.example.demo_restfulapi.Models;
+package com.example.demo_restfulapi.models;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+@EntityScan
 public class User {
     private String username;
     private String password;
@@ -7,8 +10,6 @@ public class User {
 
     public User() {
     }
-
-
 
     public User(String username, String password, boolean enable) {
         this.username = username;
