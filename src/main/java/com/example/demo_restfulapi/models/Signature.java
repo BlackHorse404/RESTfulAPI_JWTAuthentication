@@ -8,6 +8,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.util.Base64;
 
+@EntityScan
 public class Signature {
     private String cert;
     private String privateKey;
