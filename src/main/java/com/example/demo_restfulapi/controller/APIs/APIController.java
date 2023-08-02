@@ -72,6 +72,7 @@ public class APIController {
     @PostMapping("/uploadFileToSign")
     public ResponseEntity<Object> Signature(@RequestParam("upFile") MultipartFile upFile){
 
+        System.out.println(upFile.getSize());
         if(upFile != null){
             String fileName = fileStorageService.storeFile(upFile);
             System.out.println(fileStorageService.getFileStorageLocation().toString());
