@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Date;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -53,8 +53,8 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         // Normalize file name
-        String fileName = file.getOriginalFilename();
-        //new Date().getTime() + "-file." + getFileExtension(file.getOriginalFilename());
+        String fileCode = RandomStringUtils.randomAlphanumeric(8);
+        String fileName = fileCode+"-"+file.getOriginalFilename();
 
         try {
             // Check if the filename contains invalid characters
@@ -66,7 +66,7 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return fileName;
+            return fileCode;
         } catch (IOException ex) {
             throw new RuntimeException("Could not store file " + fileName + ". Please try again!", ex);
         }

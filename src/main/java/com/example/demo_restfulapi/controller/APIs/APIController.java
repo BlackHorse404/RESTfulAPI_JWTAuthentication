@@ -1,8 +1,9 @@
 package com.example.demo_restfulapi.controller.APIs;
 
+import com.example.demo_restfulapi.controller.services.FileDownloadService;
 import com.example.demo_restfulapi.controller.services.FileStorageService;
 import com.example.demo_restfulapi.models.Book;
-import com.example.demo_restfulapi.models.Signature;
+import com.example.demo_restfulapi.models.FileResponse;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfReader;
@@ -10,19 +11,19 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.cert.Certificate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +35,14 @@ public class APIController {
     @Value("classpath:static/images/bg.jpg")
     Resource backgroundSign;
 
+
     private final FileStorageService fileStorageService;
 
-    public APIController(FileStorageService fileStorageService) {
+    private final FileDownloadService downloadService;
+
+    public APIController(FileStorageService fileStorageService, FileDownloadService downloadService) {
         this.fileStorageService = fileStorageService;
+        this.downloadService = downloadService;
     }
 
     private static Map<Integer, Book> lBook = new HashMap();
@@ -70,12 +75,13 @@ public class APIController {
     }
 
     @PostMapping("/uploadFileToSign")
-    public ResponseEntity<Object> Signature(@RequestParam("upFile") MultipartFile upFile){
+    public ResponseEntity<FileResponse> Signature(@RequestParam("upFile") MultipartFile upFile){
 
         System.out.println(upFile.getSize());
+        FileResponse fileRes = null;
         if(upFile != null){
-            String fileName = fileStorageService.storeFile(upFile);
-            System.out.println(fileStorageService.getFileStorageLocation().toString());
+            String fileCode = fileStorageService.storeFile(upFile);
+            //System.out.println(fileStorageService.getFileStorageLocation().toString());
             char[] pwdArray = "ducphat".toCharArray();
             try{
                 //load keystore
@@ -90,7 +96,7 @@ public class APIController {
                 //sign file handle
                 PdfReader reader = new PdfReader(upFile.getBytes());
 
-                FileOutputStream os = new FileOutputStream(fileStorageService.getFileSignedStorageLocation().toString()+"\\signed.pdf");
+                FileOutputStream os = new FileOutputStream(fileStorageService.getFileSignedStorageLocation().toString()+"\\"+fileCode+"_signed.pdf");
                 PdfStamper stamper = PdfStamper.createSignature(reader, os, '\0');
                 PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
                 appearance.setReason("TEST SIGNATURE");
@@ -100,12 +106,40 @@ public class APIController {
                 appearance.setVisibleSignature(new Rectangle(temp.getWidth()-200, 140, temp.getWidth()-20, 60), reader.getNumberOfPages(), alias);
                 appearance.setCrypto(priKey, cert, null, PdfSignatureAppearance.WINCER_SIGNED);
                 stamper.close();
-
+                os.close();
+                reader.close();
+                //config info response file
+                fileRes = new FileResponse(fileCode + "_signed.pdf",
+                        "/api/downloadFile/" + fileCode,
+                        upFile.getSize(),
+                        "Success");
             }
             catch (Exception err) {
                 System.err.println(err.getMessage());
             }
         }
-        return new ResponseEntity<>("Upload success",HttpStatus.OK);
+        return new ResponseEntity<>(fileRes,HttpStatus.OK);
+    }
+
+    @GetMapping("/downloadFile/{pathFile}")
+    public ResponseEntity<Object> DownloadFile(@PathVariable String pathFile){
+        Resource resource = null;
+        try {
+            resource = downloadService.getFileAsResource(pathFile);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+        if (resource == null) {
+            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+        }
+
+        String contentType = "application/octet-stream";
+        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
+                .body(resource);
     }
 }
