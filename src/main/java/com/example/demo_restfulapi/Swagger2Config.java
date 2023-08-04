@@ -20,7 +20,7 @@ public class Swagger2Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.demo_restfulapi"))
-                .paths(PathSelectors.regex("/(api|auth)/.*"))
+                .paths(PathSelectors.regex("/(api|auth|downloadFile)/.*"))
                 .build()
                 .apiInfo(apiEndPointsInfo());
     }

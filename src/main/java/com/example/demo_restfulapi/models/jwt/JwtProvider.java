@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
     private String jwtSecret = PasswordHashed();
-    private int jwtExpirationInMs = 24 * 60 * 60 * 1000; // 24 hour
+    private int jwtExpirationInMs = 60*1000;//24 * 60 * 60 * 1000; // 24 hour
 
     //password secret for HS512
     public String PasswordHashed(){

@@ -1,8 +1,6 @@
 package com.example.demo_restfulapi.controller.APIs;
 
-import com.example.demo_restfulapi.controller.services.FileDownloadService;
 import com.example.demo_restfulapi.controller.services.FileStorageService;
-import com.example.demo_restfulapi.models.Book;
 import com.example.demo_restfulapi.models.FileResponse;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
@@ -11,21 +9,16 @@ import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @RestController @RequestMapping("/api/")
@@ -35,44 +28,40 @@ public class APIController {
     @Value("classpath:static/images/bg.jpg")
     Resource backgroundSign;
 
-
     private final FileStorageService fileStorageService;
 
-    private final FileDownloadService downloadService;
-
-    public APIController(FileStorageService fileStorageService, FileDownloadService downloadService) {
+    public APIController(FileStorageService fileStorageService) {
         this.fileStorageService = fileStorageService;
-        this.downloadService = downloadService;
     }
 
-    private static Map<Integer, Book> lBook = new HashMap();
-
-    static {
-        Book b1 = new Book(1,"book 1");
-        Book b2 = new Book(2,"book 2");
-        Book b3 = new Book(3,"book 3");
-
-        lBook.put(b1.getId(),b1);
-        lBook.put(b2.getId(),b2);
-        lBook.put(b3.getId(),b3);
-    }
-
-    @GetMapping("/books")
-    public ResponseEntity<Object> getListBook(){
-        return new ResponseEntity<>(lBook, HttpStatus.OK);
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<Object> addBook(@RequestBody Book newBook){
-        System.out.println(newBook.toString());
-        if(!newBook.isNull())
-        {
-            lBook.put(newBook.getId(), newBook);
-            return new ResponseEntity<>("Add Successful",HttpStatus.CREATED);
-        }
-        else
-            return new ResponseEntity<>("Add Fail",HttpStatus.BAD_REQUEST);
-    }
+//    private static Map<Integer, Book> lBook = new HashMap();
+//
+//    static {
+//        Book b1 = new Book(1,"book 1");
+//        Book b2 = new Book(2,"book 2");
+//        Book b3 = new Book(3,"book 3");
+//
+//        lBook.put(b1.getId(),b1);
+//        lBook.put(b2.getId(),b2);
+//        lBook.put(b3.getId(),b3);
+//    }
+//
+//    @GetMapping("/books")
+//    public ResponseEntity<Object> getListBook(){
+//        return new ResponseEntity<>(lBook, HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/add")
+//    public ResponseEntity<Object> addBook(@RequestBody Book newBook){
+//        System.out.println(newBook.toString());
+//        if(!newBook.isNull())
+//        {
+//            lBook.put(newBook.getId(), newBook);
+//            return new ResponseEntity<>("Add Successful",HttpStatus.CREATED);
+//        }
+//        else
+//            return new ResponseEntity<>("Add Fail",HttpStatus.BAD_REQUEST);
+//    }
 
     @PostMapping("/uploadFileToSign")
     public ResponseEntity<FileResponse> Signature(@RequestParam("upFile") MultipartFile upFile){
@@ -110,7 +99,7 @@ public class APIController {
                 reader.close();
                 //config info response file
                 fileRes = new FileResponse(fileCode + "_signed.pdf",
-                        "/api/downloadFile/" + fileCode,
+                        "/downloadFile/" + fileCode,
                         upFile.getSize(),
                         "Success");
             }
@@ -119,27 +108,5 @@ public class APIController {
             }
         }
         return new ResponseEntity<>(fileRes,HttpStatus.OK);
-    }
-
-    @GetMapping("/downloadFile/{pathFile}")
-    public ResponseEntity<Object> DownloadFile(@PathVariable String pathFile){
-        Resource resource = null;
-        try {
-            resource = downloadService.getFileAsResource(pathFile);
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
-
-        if (resource == null) {
-            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
-        }
-
-        String contentType = "application/octet-stream";
-        String headerValue = "attachment; filename=\"" + resource.getFilename() + "\"";
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
-                .body(resource);
     }
 }
